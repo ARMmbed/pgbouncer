@@ -20,4 +20,8 @@ PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE (default: 400)
 
 PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT (default: 240)
 
+PG_POOL_MODE (default: session)
+
+PG_LOG_VERBOSE (default: 0)
+
 Note: I would suggest using the mbentley/ubuntu-postgres9.3 image with this as it includes the above environment variables.

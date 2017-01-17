@@ -9,6 +9,8 @@ PG_ENV_POSTGRESQL_PASS=${PG_ENV_POSTGRESQL_PASS:-}
 PG_ENV_POSTGRESQL_MAX_CLIENT_CONN=${PG_ENV_POSTGRESQL_MAX_CLIENT_CONN:-}
 PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE=${PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE:-}
 PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT=${PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT:-}
+PG_POOL_MODE=${PG_POOL_MODE:session}
+PG_LOG_VERBOSE=${PG_LOG_VERBOSE:0}
 
 if [ ! -f /etc/pgbouncer/pgbconf.ini ]
 then
@@ -26,12 +28,13 @@ unix_socket_dir = /var/run/postgresql
 ;auth_type = any
 auth_type = trust
 auth_file = /etc/pgbouncer/userlist.txt
-pool_mode = session
+pool_mode = ${PG_POOL_MODE}
 server_reset_query = DISCARD ALL
 max_client_conn = ${PG_ENV_POSTGRESQL_MAX_CLIENT_CONN}
 default_pool_size = ${PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE}
 ignore_startup_parameters = extra_float_digits
 server_idle_timeout = ${PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT}
+verbose = ${PG_LOG_VERBOSE}
 EOF
 fi
 
