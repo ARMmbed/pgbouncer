@@ -1,0 +1,19 @@
+version: '2'
+services:
+    postgres:
+        restart: unless-stopped
+        image: kiasaki/alpine-postgres:9.5
+        environment:
+            POSTGRES_PASSWORD: suchsecuremanypassword
+
+    pgbouncer:
+        image: mbed/pgbouncer
+        build: .
+        environment:
+          PG_PORT_5432_TCP_ADDR: postgres
+          PG_PORT_5432_TCP_PORT: 5432
+          PG_ENV_POSTGRESQL_USER: root
+          PG_ENV_POSTGRESQL_PASS: suchsecuremanypassword
+        links:
+          - postgres
+            
