@@ -35,6 +35,8 @@ default_pool_size = ${PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE}
 ignore_startup_parameters = extra_float_digits
 server_idle_timeout = ${PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT}
 verbose = ${PG_LOG_VERBOSE}
+log_connections = 0
+log_disconnections = 0
 EOF
 fi
 
