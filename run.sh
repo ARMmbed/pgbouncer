@@ -40,6 +40,11 @@ log_disconnections = 0
 EOF
 fi
 
+if [ -z "${PG_STATUS_USER}" ]
+then
+    echo "stats_users = ${PG_STATUS_USER}" >> /etc/pgbouncer/pgbconf.ini
+fi
+
 if [ ! -s /etc/pgbouncer/userlist.txt ]
 then
         echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /etc/pgbouncer/userlist.txt
