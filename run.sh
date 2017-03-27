@@ -40,7 +40,7 @@ log_disconnections = 0
 EOF
 fi
 
-if [ -z "${PG_STATUS_USER}" ]
+if [ ! -z "${PG_STATUS_USER}" ]
 then
     echo "stats_users = ${PG_STATUS_USER}" >> /etc/pgbouncer/pgbconf.ini
 fi
