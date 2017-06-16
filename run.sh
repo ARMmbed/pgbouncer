@@ -11,6 +11,8 @@ PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE=${PG_ENV_POSTGRESQL_DEFAULT_POOL_SIZE:-}
 PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT=${PG_ENV_POSTGRESQL_SERVER_IDLE_TIMEOUT:-}
 PG_POOL_MODE=${PG_POOL_MODE:-session}
 PG_LOG_VERBOSE=${PG_LOG_VERBOSE:-0}
+PG_SSL_MODE=${PG_SSL_MODE:-}
+PG_SSL_ROOT_CERT=${PG_SSL_ROOT_CERT:-}
 
 if [ ! -f /etc/pgbouncer/pgbconf.ini ]
 then
@@ -44,6 +46,17 @@ if [ ! -z "${PG_STATUS_USER}" ]
 then
     echo "stats_users = ${PG_STATUS_USER}" >> /etc/pgbouncer/pgbconf.ini
 fi
+
+if [ ! -z "${PG_SSL_MODE}" ]
+then
+    echo "server_tls_sslmode = ${PG_SSL_MODE}" >> /etc/pgbouncer/pgbconf.ini
+fi
+
+if [ ! -z "${PG_SSL_ROOT_CERT}" ]
+then
+    echo "server_tls_ca_file = ${PG_SSL_ROOT_CERT}" >> /etc/pgbouncer/pgbconf.ini
+fi
+
 
 if [ ! -s /etc/pgbouncer/userlist.txt ]
 then
