@@ -14,24 +14,25 @@ PG_LOG_VERBOSE=${PG_LOG_VERBOSE:-0}
 PG_SSL_MODE=${PG_SSL_MODE:-}
 PG_SSL_ROOT_CERT=${PG_SSL_ROOT_CERT:-}
 
-mkdir -p /tmp/pgbouncer
+mkdir -p /tmp/pgbouncer/etc
+mkdir -p /tmp/pgbouncer/run
 
-if [ ! -f /tmp/pgbouncer/pgbconf.ini ]
+if [ ! -f /tmp/pgbouncer/etc/pgbconf.ini ]
 then
-cat << EOF > /tmp/pgbouncer/pgbconf.ini
+cat << EOF > /tmp/pgbouncer/etc/pgbconf.ini
 [databases]
 * = host=${PG_PORT_5432_TCP_ADDR} port=${PG_PORT_5432_TCP_PORT}
 
 [pgbouncer]
-logfile = /var/log/postgresql/pgbouncer.log
-pidfile = /var/run/postgresql/pgbouncer.pid
+logfile = /dev/null
+pidfile = /tmp/pgbouncer/run/pgbouncer.pid
 ;listen_addr = *
 listen_addr = 0.0.0.0
 listen_port = 6432
-unix_socket_dir = /var/run/postgresql
+unix_socket_dir = /tmp/pgbouncer/run
 ;auth_type = any
 auth_type = trust
-auth_file = /tmp/pgbouncer/userlist.txt
+auth_file = /tmp/pgbouncer/etc/userlist.txt
 pool_mode = ${PG_POOL_MODE}
 server_reset_query = DISCARD ALL
 max_client_conn = ${PG_ENV_POSTGRESQL_MAX_CLIENT_CONN}
@@ -46,28 +47,28 @@ fi
 
 if [ ! -z "${PG_STATUS_USER}" ]
 then
-    echo "stats_users = ${PG_STATUS_USER}" >> /tmp/pgbouncer/pgbconf.ini
+    echo "stats_users = ${PG_STATUS_USER}" >> /tmp/pgbouncer/etc/pgbconf.ini
 fi
 
 if [ ! -z "${PG_SSL_MODE}" ]
 then
-    echo "server_tls_sslmode = ${PG_SSL_MODE}" >> /tmp/pgbouncer/pgbconf.ini
+    echo "server_tls_sslmode = ${PG_SSL_MODE}" >> /tmp/pgbouncer/etc/pgbconf.ini
 fi
 
 if [ ! -z "${PG_SSL_ROOT_CERT}" ]
 then
-    echo "server_tls_ca_file = ${PG_SSL_ROOT_CERT}" >> /tmp/pgbouncer/pgbconf.ini
+    echo "server_tls_ca_file = ${PG_SSL_ROOT_CERT}" >> /tmp/pgbouncer/etc/pgbconf.ini
 fi
 
 
-if [ ! -s /tmp/pgbouncer/userlist.txt ]
+if [ ! -s /tmp/pgbouncer/etc/userlist.txt ]
 then
-        echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /tmp/pgbouncer/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /tmp/pgbouncer/etc/userlist.txt
 fi
 
 chown -R postgres:postgres /tmp/pgbouncer
-chown root:postgres /var/log/postgresql
-chmod 1775 /var/log/postgresql
-chmod 640 /tmp/pgbouncer/userlist.txt
+#chown root:postgres /var/log/postgresql
+#chmod 1775 /var/log/postgresql
+chmod 640 /tmp/pgbouncer/etc/userlist.txt
 
-/usr/sbin/pgbouncer -u postgres /tmp/pgbouncer/pgbconf.ini
+/usr/sbin/pgbouncer -u postgres /tmp/pgbouncer/etc/pgbconf.ini
