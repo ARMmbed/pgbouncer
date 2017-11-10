@@ -14,9 +14,11 @@ PG_LOG_VERBOSE=${PG_LOG_VERBOSE:-0}
 PG_SSL_MODE=${PG_SSL_MODE:-}
 PG_SSL_ROOT_CERT=${PG_SSL_ROOT_CERT:-}
 
-if [ ! -f /etc/pgbouncer/pgbconf.ini ]
+mkdir -p /tmp/pgbouncer
+
+if [ ! -f /tmp/pgbouncer/pgbconf.ini ]
 then
-cat << EOF > /etc/pgbouncer/pgbconf.ini
+cat << EOF > /tmp/pgbouncer/pgbconf.ini
 [databases]
 * = host=${PG_PORT_5432_TCP_ADDR} port=${PG_PORT_5432_TCP_PORT}
 
@@ -29,7 +31,7 @@ listen_port = 6432
 unix_socket_dir = /var/run/postgresql
 ;auth_type = any
 auth_type = trust
-auth_file = /etc/pgbouncer/userlist.txt
+auth_file = /tmp/pgbouncer/userlist.txt
 pool_mode = ${PG_POOL_MODE}
 server_reset_query = DISCARD ALL
 max_client_conn = ${PG_ENV_POSTGRESQL_MAX_CLIENT_CONN}
@@ -44,28 +46,28 @@ fi
 
 if [ ! -z "${PG_STATUS_USER}" ]
 then
-    echo "stats_users = ${PG_STATUS_USER}" >> /etc/pgbouncer/pgbconf.ini
+    echo "stats_users = ${PG_STATUS_USER}" >> /tmp/pgbouncer/pgbconf.ini
 fi
 
 if [ ! -z "${PG_SSL_MODE}" ]
 then
-    echo "server_tls_sslmode = ${PG_SSL_MODE}" >> /etc/pgbouncer/pgbconf.ini
+    echo "server_tls_sslmode = ${PG_SSL_MODE}" >> /tmp/pgbouncer/pgbconf.ini
 fi
 
 if [ ! -z "${PG_SSL_ROOT_CERT}" ]
 then
-    echo "server_tls_ca_file = ${PG_SSL_ROOT_CERT}" >> /etc/pgbouncer/pgbconf.ini
+    echo "server_tls_ca_file = ${PG_SSL_ROOT_CERT}" >> /tmp/pgbouncer/pgbconf.ini
 fi
 
 
-if [ ! -s /etc/pgbouncer/userlist.txt ]
+if [ ! -s /tmp/pgbouncer/userlist.txt ]
 then
-        echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /etc/pgbouncer/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /tmp/pgbouncer/userlist.txt
 fi
 
-chown -R postgres:postgres /etc/pgbouncer
+chown -R postgres:postgres /tmp/pgbouncer
 chown root:postgres /var/log/postgresql
 chmod 1775 /var/log/postgresql
-chmod 640 /etc/pgbouncer/userlist.txt
+chmod 640 /tmp/pgbouncer/userlist.txt
 
-/usr/sbin/pgbouncer -u postgres /etc/pgbouncer/pgbconf.ini
+/usr/sbin/pgbouncer -u postgres /tmp/pgbouncer/pgbconf.ini
