@@ -14,6 +14,8 @@ PG_LOG_VERBOSE=${PG_LOG_VERBOSE:-0}
 PG_SSL_MODE=${PG_SSL_MODE:-}
 PG_SSL_ROOT_CERT=${PG_SSL_ROOT_CERT:-}
 
+rm -rf /tmp/pgbouncer/*
+
 mkdir -p /tmp/pgbouncer/etc
 mkdir -p /tmp/pgbouncer/run
 
