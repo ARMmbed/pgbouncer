@@ -65,7 +65,11 @@ fi
 
 if [ ! -s /tmp/pgbouncer/etc/userlist.txt ]
 then
-        echo '"'"${PG_ENV_POSTGRESQL_USER}"'" "'"${PG_ENV_POSTGRESQL_PASS}"'"'  > /tmp/pgbouncer/etc/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_DC_USER}"'" "'"${PG_ENV_POSTGRESQL_DC_PASS}"'"'  >> /tmp/pgbouncer/etc/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_FC_USER}"'" "'"${PG_ENV_POSTGRESQL_FC_PASS}"'"'  >> /tmp/pgbouncer/etc/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_DS_USER}"'" "'"${PG_ENV_POSTGRESQL_DS_PASS}"'"'  >> /tmp/pgbouncer/etc/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_CC_USER}"'" "'"${PG_ENV_POSTGRESQL_CC_PASS}"'"'  >> /tmp/pgbouncer/etc/userlist.txt
+        echo '"'"${PG_ENV_POSTGRESQL_DQ_USER}"'" "'"${PG_ENV_POSTGRESQL_DQ_PASS}"'"'  >> /tmp/pgbouncer/etc/userlist.txt
 fi
 
 chown -R postgres:postgres /tmp/pgbouncer
